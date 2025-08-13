@@ -1,0 +1,46 @@
+import time
+from turtle import Screen
+from player import Player
+from car_manager import carManager
+from scoreboard import Scoreboard
+
+screen = Screen()
+
+
+screen.setup(height=600,width=600)
+screen.tracer(0)
+
+new_player = Player()
+new_car = carManager()
+new_score = Scoreboard()
+
+#Listen to key
+screen.listen()
+screen.onkey(new_player.move_up,"Up")
+screen.onkey(new_player.move_down,"Down")
+
+game_is_on = True
+while game_is_on:
+    time.sleep(0.1)
+
+    new_car.create_cars()
+    new_car.move_car()
+    if new_player.ycor() > 295:
+        new_player.next_level()
+        new_car.car_new_level()
+        new_score.update_scoreboard()
+        new_score.increase_level()
+
+        # Check collision
+    for car in new_car.cars:
+        if new_player.distance(car) < 29:
+            new_score.game_over()
+            game_is_on = False
+            print("Game Over!")
+
+    screen.update()
+
+
+
+
+screen.exitonclick()
